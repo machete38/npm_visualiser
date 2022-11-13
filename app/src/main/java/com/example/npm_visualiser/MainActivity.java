@@ -2,34 +2,27 @@ package com.example.npm_visualiser;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
-import androidx.viewpager.widget.ViewPager;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.npm_visualiser.utils.CustomRvAdapter;
 import com.example.npm_visualiser.utils.ParseObject;
-import com.example.npm_visualiser.utils.TabFragmentAdapter;
 import com.example.npm_visualiser.utils.TabObject;
-import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,27 +43,22 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-    private int indicatorWidth;
     public int screenHeight, depFound;
     public TabObject tabObject;
     public String searchRequest;
-    TabFragmentAdapter adapter2;
 
     @BindView(R.id.tvprogress) TextView tvprogress;
-    @BindView(R.id.vp) ViewPager mViewPager;
     @BindView(R.id.nopck) RelativeLayout nopck;
+    @BindView(R.id.rv_fragment) RecyclerView recyclerView;
     @BindView(R.id.pb) RelativeLayout pb;
     @BindView(R.id.editText) EditText et;
     @BindView(R.id.rl_root) RelativeLayout root;
     @BindView(R.id.tv_pck_name) TextView pck_name;
-    @BindView(R.id.indicator) View mIndicator;
-    @BindView(R.id.tab) TabLayout mTabs;
     @BindView(R.id.scrollView) NestedScrollView sview;
     @BindView(R.id.rl_top) RelativeLayout rl;
     @BindView(R.id.rl_back) RelativeLayout back;
     @BindView(R.id.button_search) Button btn;
     @BindView(R.id.tv_nodep) TextView nodep;
-    @BindView(R.id.ll_dep) LinearLayout ll_dep;
     @BindView(R.id.rl_bottom) RelativeLayout rl_bottom;
 
     public void search ()
@@ -95,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         measureScreen();
-        setupTab();
         setupTextChanger();
 
     }
@@ -140,43 +127,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void setupTab() {
-        adapter2 = new TabFragmentAdapter(getSupportFragmentManager());
-        adapter2.addFragment(FragmentOne.newInstance(), "Таблица");
-        adapter2.addFragment(FragmentTwo.newInstance(), "Дерево");
-        mViewPager.setAdapter(adapter2);
-        mTabs.setupWithViewPager(mViewPager);
-        mTabs.post(new Runnable() {
-            @Override
-            public void run() {
-                indicatorWidth = mTabs.getWidth() / mTabs.getTabCount();
-                FrameLayout.LayoutParams indicatorParams = (FrameLayout.LayoutParams) mIndicator.getLayoutParams();
-                indicatorParams.width = indicatorWidth;
-                mIndicator.setLayoutParams(indicatorParams);
-            }
-        });
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-
-            @Override
-            public void onPageScrolled(int i, float positionOffset, int positionOffsetPx) {
-                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)mIndicator.getLayoutParams();
-                float translationOffset =  (positionOffset+i) * indicatorWidth ;
-                params.leftMargin = (int) translationOffset;
-                mIndicator.setLayoutParams(params);
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
-    }
 
     public URL generateURL(String pName)
     {
@@ -252,21 +202,17 @@ public class MainActivity extends AppCompatActivity {
                 sview.setVisibility(View.VISIBLE);
                 if (tabObject.getList().size()==0)
                 {
-                    ll_dep.setVisibility(View.GONE);
-                    mViewPager.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
                     nodep.setVisibility(View.VISIBLE);
                 }
                 else
                 {
                     nodep.setVisibility(View.GONE);
-                    ll_dep.setVisibility(View.VISIBLE);
-                    FragmentOne fr = (FragmentOne)adapter2.getItem(0);
-                    setupScrollView(fr);
                     CustomRvAdapter adapter = new CustomRvAdapter(tabObject);
-                    fr.setRvAdapter(adapter);
-                    int height = fr.getFragHeight();
-                    adjustVPheight(findVPHeight(height));
-                    mViewPager.setVisibility(View.VISIBLE);
+                    DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+                    recyclerView.addItemDecoration(dividerItemDecoration);
+                    recyclerView.setAdapter(adapter);
+                    recyclerView.setVisibility(View.VISIBLE);
                 }
                 pck_name.setText("Имя пакета:\n"+name+"\nВерсия: \n"+version+"\n\nЗависимости:");
             }
@@ -347,18 +293,5 @@ public class MainActivity extends AppCompatActivity {
         return new ParseObject(name, version, list);
     }
 
-    private void setupScrollView(FragmentOne fr) {
 
-    }
-
-    private int findVPHeight(int h)
-    {
-        int height = screenHeight - ll_dep.getHeight() - rl_bottom.getHeight();
-        return height;
-    }
-    private void adjustVPheight(int h) {
-        ViewGroup.LayoutParams params = mViewPager.getLayoutParams();
-        params.height = h;
-        mViewPager.requestLayout();
-    }
 }

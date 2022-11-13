@@ -54,40 +54,6 @@
                 android:id="@+id/rl_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            <LinearLayout
-                android:id="@+id/ll_dep"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/tv_pck_name"
-                android:orientation="vertical"
-                tools:context=".MainActivity">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="32dp"
-                    android:clipToPadding="false">
-
-                    <View
-                        android:id="@+id/indicator"
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:background="@drawable/gradient_bg"/>
-
-                    <com.google.android.material.tabs.TabLayout
-                        android:id="@+id/tab"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@drawable/tab_bg"
-                        app:tabGravity="fill"
-                        app:tabMode="fixed"
-                        app:tabSelectedTextColor="#ffffff"
-                        app:tabIndicatorHeight="0dp"
-                        app:tabRippleColor="@null"/>
-
-                </FrameLayout>
-
-            </LinearLayout>
                 <TextView
                     android:id="@+id/tv_nodep"
                     android:visibility="gone"
@@ -107,15 +73,14 @@
                     android:padding="10dp"
                     android:textColor="@color/white"
                     android:textSize="55dp" />
-            </RelativeLayout>
-
-
-                <androidx.viewpager.widget.ViewPager
-                    android:layout_below="@id/rl_top"
-                    android:id="@+id/vp"
+                <androidx.recyclerview.widget.RecyclerView
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    android:id="@+id/rv_fragment"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_below="@id/tv_pck_name"
                     android:layout_width="match_parent"
-                    android:layout_height="700dp"/>
-
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
 
 
 
