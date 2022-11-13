@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/cardview_dark_background"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/rl_rv_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/rv_name"
+            android:padding="5dp"
+            android:textColor="#fff"
+            android:textSize="30dp"
+            android:layout_width="match_parent"
+            android:layout_toStartOf="@id/rv_chev"
+            android:layout_height="wrap_content"
+            android:text="Имя: "/>
+
+
+        <ImageView
+            android:id="@+id/rv_chev"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/chevrone_left"/>
+    </RelativeLayout>
+<RelativeLayout
+    android:id="@+id/rv_rl_bottom"
+    android:layout_below="@id/rl_rv_top"
+    android:layout_width="match_parent"
+    android:visibility="gone"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="8dp"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@id/rv_bottomrv"
+        android:layout_margin="3dp"
+        android:background="@color/black" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        android:id="@+id/rv_bottomrv"
+        android:nestedScrollingEnabled="false"
+        android:layout_marginStart="2dp"
+        android:layout_toEndOf="@id/view"
+        android:layout_marginEnd="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</RelativeLayout>
+</RelativeLayout>
